@@ -1,44 +1,66 @@
 <template>
-  <div id="app">
-    <img src="./logo.svg" />
-    <h1>Hello <a href='https://github.com/vuejs/vite' target='__blank'>Vite</a> and <a href='https://github.com/vueuse/vueuse' target='__blank'>VueUse</a>!</h1>
+  <div id="app" class="flex flex-col items-center">
+    <textarea class="w-full min-h-32" v-model="textArea"></textarea>
+    <div class="w-full mt-6 h-px bg-black"></div>
 
-    <h3>Mouse: {{x}} x {{y}}</h3>
-    <h3>
-      Counter: {{count}}
-      <a @click='inc()' style='margin-right:10px'>+</a>
-      <a @click='dec()'>-</a>
-    </h3>
-
-    <br><br>
-    <p><a href='https://github.com/vueuse/vueuse-vite-starter' target='__blank'>Source</a></p>
-    <p><a href='https://vueuse-vue3-example.netlify.app/' target='__blank'>Webpack Example</a></p>
+    <!-- 解析markdown内容 -->
+    <div class="w-full mt-6 border border-black border-solid markdown-wrapper">
+      <div v-html="html"></div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useMouse, useCounter } from '@vueuse/core'
+import { computed, ref } from "vue";
+import { useMarkdown } from "./use_markdown";
 
-const { x, y } = useMouse()
-const { count, inc, dec } = useCounter()
+const demoText = `
+## 目标
+
+1. 新人有一套能够**快速**上手的**规范**任务流
+
+2. 为重构平台打下基础
+
+## 措施
+
+1. 如何建立一个任务流？
+
+   a. 普及基础知识（平台和代码的基础使用）
+
+   b. 简单的实际操作（平台的简单业务流）
+
+   c. 代码的简单梳理，需要过一遍一个模块的构成
+
+   d. 单独完成一个模块的代码
+
+   e. 代码走读，认识自己（是否有提高和不足）
+
+   f. 使用总结，对产品的理解
+   
+2. 发现重构的难点
+
+    a. 时间紧，任务多，如何高效完成一个模块的重写？
+
+    b. 如何不遗漏一个模块的业务？
+
+    c. 如何让测试相信你的模块已经开发完全
+`
+
+const textArea = ref(demoText);
+
+const html = computed(() => {
+  return useMarkdown(textArea.value);
+});
 </script>
 
 <style scoped>
-html, body, h1, h2, h3, p {
-  font-family: 'Noto Serif', serif;
-  user-select: none;
+.markdown-wrapper {
+	min-height: 500px;
 }
 
-#app {
-  text-align: center;
-  color: rgba(0,0,0,0.4);
-}
-img {
-  width: 500px;
-}
-a {
-  color: #41b883;
-  text-decoration: none;
-  cursor: pointer;
-}
+
+
+
+
+
 </style>
